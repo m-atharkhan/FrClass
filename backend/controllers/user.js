@@ -52,7 +52,7 @@ export const login = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        return res.status(200).json({ success: true, message: "Login successful." });
+        return res.status(200).json({ success: true, message: "Login successful.", User: user });
 
     } catch (error) {
         console.log(`Error in user login controller: ${error}`);
@@ -78,7 +78,7 @@ export const logout = async (req, res) => {
 export const getProfile = (req, res) => {
     try {
         const user = req.user;
-        res.status(200).json({success:true, user});
+        res.status(200).json({success:true, User: user});
     } catch (error) {
         console.log(`Error in user getProfile controller: ${error}`);
         return res.status(500).json({success:false, message:"Internal Server Error"});

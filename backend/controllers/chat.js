@@ -9,7 +9,9 @@ export const sendMessage = async (req, res) => {
       return res.status(400).json({ success: false, message: "Class ID and message are required." });
     }
 
-    const classDoc = await Class.findById(classId);
+    const classDoc = await Class.findById(classId)
+      .populate("chat.sender", "username") // Ensure sender is populated
+      .select("chat");
 
     if (!classDoc) {
       return res.status(404).json({ success: false, message: "Class not found." });
@@ -19,6 +21,12 @@ export const sendMessage = async (req, res) => {
     classDoc.chat.push(newMessage);
 
     await classDoc.save();
+
+    req.io.to(classId).emit("receiveMessage", {
+      sender: req.user.username,
+      message,
+      timestamp: new Date(),
+    });
 
     return res.status(201).json({ success: true, message: "Message sent successfully", chat: newMessage });
   } catch (error) {

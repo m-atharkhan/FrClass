@@ -41,6 +41,9 @@ const classSchema = new mongoose.Schema(
                     type: String,
                     required: true
                 },
+                image: {
+                    type: String,
+                },
                 timestamp: {
                     type: Date,
                     default: Date.now

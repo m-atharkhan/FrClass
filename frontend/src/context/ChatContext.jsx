@@ -22,7 +22,7 @@ export const ChatProvider = ({ children }) => {
                 socketInitialized.current = true;
             }
         }
-    }, [classId, message]);
+    }, [classId, message, image]);
 
     const setupSocket = (classId) => {
         socket.connect();
@@ -47,19 +47,16 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    const sendMessage = async (id, message, selectedImage) => {
-        if (!message.trim()) return;
-
-        const formData = new FormData();
-        formData.append("classId", id);
-        formData.append("message", message);
-        if (selectedImage) {
-            formData.append("image", selectedImage);
-        }
-
+    const sendMessage = async (id) => {
+        console.log({ id, message, image })
+        if ((!message || message.trim() === "") && !image) return;
+        console.log({ id, message, image })
         try {
-            await API.post("/chat/send", formData, { withCredentials: true });
+            console.log({ id, message, image })
+            await API.post("/chat/send", { id, message, image });
+            console.log({ id, message, image })
             setMessage("");
+            setImage(null);
         } catch (error) {
             console.error("Error sending message:", error);
         }

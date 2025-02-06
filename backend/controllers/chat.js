@@ -1,48 +1,66 @@
+import cloudinary from "../config/multerConfig.js";
 import Class from "../models/class.js";
-import path from "path";
-import { v2 as cloudinary } from "cloudinary";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { classId, message } = req.body;
-    const sender = req.user._id;
-    let imageUrl = null;
-
-    if (!classId || (!message && !req.file)) {
-      return res.status(400).json({ success: false, message: "Class ID, message, and/or image are required." });
+    const { id: classId, message, image } = req.body;
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    if (req.file) {
-      const uploadedImage = await cloudinary.uploader.upload(req.file.path);
-      imageUrl = uploadedImage.secure_url;
+    console.log("Request Body:", req.body);
+
+    let imageUrl = "";
+    
+    if (image) {
+      const uploadResponse = await cloudinary.uploader.upload(image, {
+        folder: "chat_images",
+        allowed_formats: ["jpg", "jpeg", "png"],
+        transformation: [{ width: 500, height: 500, crop: "limit" }],
+      });
+      imageUrl = uploadResponse.secure_url;
     }
 
-    const classDoc = await Class.findById(classId)
-      .populate("chat.sender", "username")
-      .select("chat");
+    const classDoc = await Class.findById(classId);
 
     if (!classDoc) {
       return res.status(404).json({ success: false, message: "Class not found." });
     }
 
-    const newMessage = { sender, message, image: imageUrl };
+    // Ensure chat array exists
+    if (!Array.isArray(classDoc.chat)) {
+      classDoc.chat = [];
+    }
 
+    const newMessage = { sender: req.user, message: message?.trim() || "", image: imageUrl };
+    
+    console.log("New Message:", newMessage);
+    
     classDoc.chat.push(newMessage);
     await classDoc.save();
 
     req.io.to(classId).emit("receiveMessage", {
       sender: req.user.username,
-      message,
-      imageUrl,
+      message: newMessage.message,
+      image: newMessage.image,
       timestamp: new Date(),
     });
 
-    return res.status(201).json({ success: true, message: "Message sent successfully", chat: newMessage });
+    return res.status(201).json({
+      success: true,
+      message: "Message sent successfully",
+      chat: newMessage,
+    });
   } catch (error) {
-    console.log("Error in sendMessage:", error);
-    return res.status(500).json({ success: false, message: "Internal Server Error" });
+    console.error("Error in sendMessage:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
+
+
 
 // Get messages function remains the same
 export const getMessages = async (req, res) => {

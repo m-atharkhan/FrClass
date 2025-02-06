@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useChat } from "../../context/ChatContext.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { FaCamera, FaImage, FaSmile } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 
 const ClassContent = ({ classDetails, id }) => {
-    const { chatMessages, message, setMessage, sendMessage, chatEndRef } = useChat();
+    const { chatMessages, message, setMessage, sendMessage, image, setImage, chatEndRef } = useChat();
     const { user } = useAuth();
     const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
 
@@ -15,17 +16,32 @@ const ClassContent = ({ classDetails, id }) => {
         setShowDetails(!showDetails);
     };
 
-    const handleSendMessage = () => {
-        sendMessage(id, message, selectedImage);
+    const handleSendMessage = async () => {
+        if (!message.trim() && !image) return;
+
+        await sendMessage(id);
+        setMessage("");
         setSelectedImage(null);
+        setImagePreview(null);
+        setImage(null);
     };
 
     const handleImagePreview = (e) => {
-        setSelectedImage(e.target.files[0]);
+        const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setImagePreview(reader.result); // Base64 for preview
+                setSelectedImage(reader.result);
+                setImage(reader.result); // Base64 for sending
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleEmojiClick = (emojiObject) => {
-        setMessage(message + emojiObject.emoji);
+        setMessage((prev) => prev + emojiObject.emoji);
         setEmojiPickerVisible(false);
     };
 
@@ -34,7 +50,9 @@ const ClassContent = ({ classDetails, id }) => {
             {/* Class Information */}
             {classDetails ? (
                 <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-                    <h1 className="text-2xl font-bold text-green-700 cursor-pointer" onClick={handleClassClick}>{classDetails.name}</h1>
+                    <h1 className="text-2xl font-bold text-green-700 cursor-pointer" onClick={handleClassClick}>
+                        {classDetails.name}
+                    </h1>
                     <p className="mt-2 text-gray-600">{classDetails.description}</p>
                     {showDetails && (
                         <div className="mt-4">
@@ -42,21 +60,16 @@ const ClassContent = ({ classDetails, id }) => {
                                 <h3 className="text-xl font-semibold">Students:</h3>
                                 <ul>
                                     {classDetails.students.map((student, index) => (
-                                        <li key={index} className="text-gray-600">
-                                            {student.username}
-                                        </li>
+                                        <li key={index} className="text-gray-600">{student.username}</li>
                                     ))}
                                 </ul>
                             </div>
-
                             <div>
                                 <h3 className="text-xl font-semibold">Polls:</h3>
                                 {classDetails.polls.length > 0 ? (
                                     <ul>
                                         {classDetails.polls.map((poll, index) => (
-                                            <li key={index} className="text-gray-600">
-                                                {poll.question}
-                                            </li>
+                                            <li key={index} className="text-gray-600">{poll.question}</li>
                                         ))}
                                     </ul>
                                 ) : (
@@ -66,10 +79,8 @@ const ClassContent = ({ classDetails, id }) => {
                         </div>
                     )}
                 </div>
-
             ) : (
                 <p className="text-gray-500 text-center">Loading class details...</p>
-
             )}
 
             {/* Chat Section */}
@@ -77,38 +88,19 @@ const ClassContent = ({ classDetails, id }) => {
                 {/* Chat Messages */}
                 <div className="flex-1 overflow-y-auto max-h-[65vh] p-2">
                     {chatMessages.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={`flex ${msg.sender._id === user._id ? "justify-start" : "justify-end"} mb-2`}
-                        >
-                            <div
-                                className={`p-2 rounded-lg shadow ${msg.sender._id === user._id
-                                    ? "bg-green-500 text-white text-left"
-                                    : "bg-green-100 text-black text-left"} max-w-xs`}
+                        <div key={index} className={`flex ${msg.sender._id === user._id ? "justify-start" : "justify-end"} mb-2`}>
+                            <div className={`p-2 rounded-lg shadow ${msg.sender._id === user._id
+                                ? "bg-green-500 text-white text-left"
+                                : "bg-green-100 text-black text-left"} max-w-xs`}
                             >
-                                {msg.sender._id === user._id ? (
-                                    <>
-                                        <div className="text-xs block mt-1 text-green-800">Me</div>
-                                        <p className="text-sm">{msg.message}</p>
-                                        {msg.image && (
-                                            <img src={msg.image} alt="Message attachment" className="mt-2 w-32 h-32 object-cover rounded-lg" />
-                                        )}
-                                        <span className="text-xs block mt-1 text-white-200">
-                                            {new Date(msg.timestamp).toLocaleTimeString()}
-                                        </span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="text-xs block mt-1 text-green-800">{msg.sender.username}</div>
-                                        <p className="text-sm">{msg.message}</p>
-                                        {msg.image && (
-                                            <img src={msg.image} alt="Message attachment" className="mt-2 w-32 h-32 object-cover rounded-lg" />
-                                        )}
-                                        <span className="text-xs block mt-1 text-green-500">
-                                            {new Date(msg.timestamp).toLocaleTimeString()}
-                                        </span>
-                                    </>
+                                <div className="text-xs block mt-1 text-green-800">{msg.sender._id === user._id ? "Me" : msg.sender.username}</div>
+                                <p className="text-sm">{msg.message}</p>
+                                {msg.image && (
+                                    <img src={msg.image} alt="Message attachment" className="mt-2 object-cover rounded-lg" />
                                 )}
+                                <span className="text-xs block mt-1 text-gray-500">
+                                    {new Date(msg.timestamp).toLocaleTimeString()}
+                                </span>
                             </div>
                         </div>
                     ))}
@@ -121,8 +113,12 @@ const ClassContent = ({ classDetails, id }) => {
                         type="text"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                        placeholder="Type a message..."
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleSendMessage();
+                            }
+                        }}
+                        placeholder="Type a message or send an image..."
                         className="flex-1 p-2 border rounded-l-lg focus:outline-none"
                     />
                     <button
@@ -145,16 +141,13 @@ const ClassContent = ({ classDetails, id }) => {
                     </label>
 
                     {/* Emoji Picker */}
-                    <div className="ml-2">
-                        <button
-                            className="text-2xl cursor-pointer"
-                            onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}
-                        >
-                            😀
-                        </button>
-                    </div>
+                    <button
+                        className="text-2xl cursor-pointer ml-2"
+                        onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}
+                    >
+                        😀
+                    </button>
 
-                    {/* Emoji Picker */}
                     {emojiPickerVisible && (
                         <div className="absolute bottom-16">
                             <EmojiPicker onEmojiClick={handleEmojiClick} />
@@ -162,26 +155,24 @@ const ClassContent = ({ classDetails, id }) => {
                     )}
 
                     {/* Preview Selected Image */}
-                    {selectedImage && (
-                        <div className="mt-2 absolute -top-56 flex justify-center items-center bg-gray-100 p-4 rounded-lg shadow-md">
-                            <div className="flex flex-col items-center">
-                                <img
-                                    src={URL.createObjectURL(selectedImage)}
-                                    alt="Preview"
-                                    className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-                                />
-                                <p className="text-sm text-gray-700 mt-2">{selectedImage.name}</p>
-                            </div>
-                            {/* Close button to remove the image preview */}
+                    {imagePreview && (
+                        <div className="absolute bottom-20 bg-gray-100 p-4 rounded-lg shadow-md">
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                            />
                             <button
                                 className="text-red-500 text-xl ml-4"
-                                onClick={() => setSelectedImage(null)}
+                                onClick={() => {
+                                    setSelectedImage(null);
+                                    setImagePreview(null);
+                                }}
                             >
                                 ✖
                             </button>
                         </div>
                     )}
-
                 </div>
             </div>
         </div>

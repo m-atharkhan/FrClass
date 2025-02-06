@@ -75,7 +75,7 @@ const ClassPage = () => {
                 <div className="w-full flex justify-between">
                     <div className="flex items-center gap-10">
                         <img
-                            src="https://files.oaiusercontent.com/file-F8AHPrJcnYhCQn6N8rRFuo?se=2025-02-05T19%3A48%3A31Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D01eebba6-6295-4f7a-8d99-8e3ef6de52a2.webp&sig=FWne202%2BKWN8LlRGxN29TcMMPDR5ejBZ%2BKcHtUlwuS8%3D"
+                            src="https://res.cloudinary.com/ddli8bywu/image/upload/v1738833010/DALL_E_2025-02-06_01.16.14_-_A_close-up_digital_illustration_of_two_hands_clasping_each_other_in_a_gesture_of_connection_and_support_similar_to_the_classic_Nokia_handshake_logo._bv1wok.webp"
                             className="w-16 h-16 mx-auto rounded-full border-2 cursor-pointer border-blue-400"
                         />
                         <h1 className="text-3xl italic font-bold text-center mb-4">Connect & Share</h1>

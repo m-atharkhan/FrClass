@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 
 export const register = async (req, res) => {
     try {
@@ -88,10 +89,33 @@ export const getProfile = (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const userId = req.user._id;
-        const updateData = req.body;
-
+        const updateData = { ...req.body }; // Clone body data
+        console.log(req.body);
         const restrictedFields = ["_id", "password", "createdAt", "updatedAt", "__v"];
         restrictedFields.forEach(field => delete updateData[field]);
+
+        console.log("File Received:", req.file);
+        console.log("Request Body:", req.body);
+
+        if (req.file) {
+            try {
+                const uploadedImage = await cloudinary.uploader.upload(req.file.path);
+                if (uploadedImage?.secure_url) {
+                    updateData.profilePic = uploadedImage.secure_url;
+                } else {
+                    return res.status(500).json({ success: false, message: "Image upload failed" });
+                }
+            } catch (uploadError) {
+                console.log("Cloudinary Upload Error:", uploadError);
+                return res.status(500).json({ success: false, message: "Error uploading image" });
+            }
+        }
+
+        if (typeof updateData.profilePic !== "string") {
+            delete updateData.profilePic;
+        }
+
+        console.log("Updated Data:", updateData);
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,

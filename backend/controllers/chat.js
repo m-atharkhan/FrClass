@@ -1,5 +1,6 @@
 import Class from "../models/class.js";
 import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -12,7 +13,8 @@ export const sendMessage = async (req, res) => {
     }
 
     if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`;
+      const uploadedImage = await cloudinary.uploader.upload(req.file.path);
+      imageUrl = uploadedImage.secure_url;
     }
 
     const classDoc = await Class.findById(classId)
@@ -26,7 +28,6 @@ export const sendMessage = async (req, res) => {
     const newMessage = { sender, message, image: imageUrl };
 
     classDoc.chat.push(newMessage);
-
     await classDoc.save();
 
     req.io.to(classId).emit("receiveMessage", {

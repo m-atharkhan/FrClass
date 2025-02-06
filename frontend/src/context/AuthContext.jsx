@@ -54,9 +54,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateProfile = async (updateData) => {
+  const updateProfile = async ({ username, image }) => {
     try {
-      const response = await API.put("/user/update-profile", updateData);
+      console.log(image)
+      const response = await API.put("/user/update-profile", {
+        username,
+        image
+      });
       setUser(response.data.user);
     } catch (error) {
       throw error.response?.data?.message || "Failed to update profile.";

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import API from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -13,7 +14,6 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await API.get("/user/profile");
         setUser(response.data.User);
-        console.log(user);
       } catch (error) {
         if (error.response?.status === 403) {
           setUser(null);
@@ -54,13 +54,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateProfile = async ({ username, image }) => {
+  const updateProfile = async (formData) => {
     try {
-      console.log(image)
-      const response = await API.put("/user/update-profile", {
-        username,
-        image
-      });
+      const response = await API.put("/user/update-profile", formData);
       setUser(response.data.user);
     } catch (error) {
       throw error.response?.data?.message || "Failed to update profile.";

@@ -11,14 +11,4 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'CoolFr_chat_images',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'gif']
-  }
-});
-
-const upload = multer({ storage });
-
-export default upload;
+export default cloudinary;

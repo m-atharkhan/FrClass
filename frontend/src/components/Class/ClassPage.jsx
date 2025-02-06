@@ -89,7 +89,7 @@ const ClassPage = () => {
                                 Login
                             </button>
                         ) : <img
-                            src="https://th.bing.com/th/id/OIP.ln3Rd8nn4BPJY7i5g9WWmAHaG6?rs=1&pid=ImgDetMain"
+                            src={`${user.profilePic}`}
                             onClick={() => navigate('/profile')}
                             className="w-16 h-16 mx-auto rounded-full border-2 cursor-pointer border-blue-400"
                         />

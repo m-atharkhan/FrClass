@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "../config/multerConfig.js";
 
 export const register = async (req, res) => {
     try {
@@ -88,52 +88,33 @@ export const getProfile = (req, res) => {
 
 export const updateProfile = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const updateData = { ...req.body }; // Clone body data
-        console.log(req.body);
-        const restrictedFields = ["_id", "password", "createdAt", "updatedAt", "__v"];
-        restrictedFields.forEach(field => delete updateData[field]);
-
-        console.log("File Received:", req.file);
-        console.log("Request Body:", req.body);
-
-        if (req.file) {
-            try {
-                const uploadedImage = await cloudinary.uploader.upload(req.file.path);
-                if (uploadedImage?.secure_url) {
-                    updateData.profilePic = uploadedImage.secure_url;
-                } else {
-                    return res.status(500).json({ success: false, message: "Image upload failed" });
-                }
-            } catch (uploadError) {
-                console.log("Cloudinary Upload Error:", uploadError);
-                return res.status(500).json({ success: false, message: "Error uploading image" });
-            }
-        }
-
-        if (typeof updateData.profilePic !== "string") {
-            delete updateData.profilePic;
-        }
-
-        console.log("Updated Data:", updateData);
-
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { $set: updateData },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({ success: false, message: "User not found." });
-        }
-
-        res.status(200).json({ success: true, user: updatedUser });
-
+      const userId = req.user._id;
+      const { profilePic } = req.body;
+  
+      if (!profilePic) {
+        return res.status(400).json({ success: false, message: 'No profile picture provided' });
+      }
+  
+      // Upload to Cloudinary
+      const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+        folder: 'profile_pics',
+        allowed_formats: ['jpg', 'jpeg', 'png'],
+        transformation: [{ width: 500, height: 500, crop: 'limit' }]
+      });
+  
+      // Update user profile with Cloudinary URL
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profilePic: uploadResponse.secure_url },
+        { new: true }
+      );
+  
+      res.status(200).json({ success: true, user: updatedUser });
     } catch (error) {
-        console.log(`Error in user updateProfile controller: ${error}`);
-        return res.status(500).json({ success: false, message: "Internal Server Error" });
+      console.log(`Error in user updateProfile controller: ${error.message}`);
+      return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-};
+  };
 
 export const deleteProfile = async (req, res) => {
     try {

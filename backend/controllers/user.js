@@ -48,6 +48,8 @@ export const login = async (req, res) => {
         const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: '1w'});
         res.cookie("jwt", token, {
             httpOnly: true,
+            secure: true,  // Important for HTTPS
+            sameSite: "None",  // Required for cross-site cookies
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 

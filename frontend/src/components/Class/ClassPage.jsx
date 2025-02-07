@@ -72,8 +72,8 @@ const ClassPage = () => {
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
                     <img
-                        src="https://res.cloudinary.com/ddli8bywu/image/upload/v1738833010/DALL_E_2025-02-06_01.16.14_-_A_close-up_digital_illustration_of_two_hands_clasping_each_other_in_a_gesture_of_connection_and_support_similar_to_the_classic_Nokia_handshake_logo._bv1wok.webp"
-                        className="w-14 h-14 rounded-full border-2 cursor-pointer border-blue-400"
+                        src="image.png"
+                        className="w-auto h-14 rounded-full border-2 cursor-pointer border-blue-400"
                         alt="Logo"
                     />
                     <h1 className="text-3xl font-bold text-center"><span className="text-green-600">Loop</span><span className="text-blue-600"> IN</span></h1>

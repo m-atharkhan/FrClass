@@ -71,8 +71,8 @@ const ClassContent = ({ classDetails, id }) => {
                     {chatMessages.map((msg, i) => (
                         <div key={i} className={`flex ${msg.sender._id === user._id ? "justify-end" : "justify-start"} mb-2`}>
                             <div className={`p-2 rounded-2xl shadow-md text-sm max-w-xs ${msg.sender._id === user._id
-                                    ? "bg-green-500 text-white"
-                                    : "bg-gray-200 text-black"
+                                ? "bg-green-500 text-white"
+                                : "bg-gray-200 text-black"
                                 }`}
                             >
                                 <div className="text-xs text-gray-300">{msg.sender._id === user._id ? "Me" : msg.sender.username}</div>
@@ -88,7 +88,7 @@ const ClassContent = ({ classDetails, id }) => {
                 </div>
 
                 {/* Chat Input */}
-                <div className="fixed bottom-0 left-0 w-full bg-white p-2 border-t flex items-center shadow-lg z-50">
+                <div className="fixed bottom-0 left-0 w-full md:w-3/4 bg-white p-2 border-t flex items-center shadow-lg z-50">
                     {/* Emoji Picker Button */}
                     <button
                         className="text-gray-500 text-2xl p-2 hover:text-green-500 transition"

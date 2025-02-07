@@ -88,7 +88,7 @@ const ClassContent = ({ classDetails, id }) => {
                 </div>
 
                 {/* Chat Input */}
-                <div className="fixed bottom-0 left-0 w-full md:w-3/4 bg-white p-2 border-t flex items-center shadow-lg z-50">
+                <div className="fixed bottom-0 right-0 w-full md:w-3/4 bg-white p-2 border-t flex items-center shadow-lg z-50">
                     {/* Emoji Picker Button */}
                     <button
                         className="text-gray-500 text-2xl p-2 hover:text-green-500 transition"
@@ -127,7 +127,7 @@ const ClassContent = ({ classDetails, id }) => {
                         </button>
                     ) : (
                         <button className="text-gray-500 text-2xl p-2 hover:text-green-500 transition">
-                            <FaMicrophone />
+                            {/* <FaMicrophone /> */}
                         </button>
                     )}
 

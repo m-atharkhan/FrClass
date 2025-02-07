@@ -59,12 +59,12 @@ const ClassDetailsPage = () => {
             </button>
 
             {/* Sidebar - Hidden on Mobile */}
-            <div className={`fixed top-0 right-0 h-full w-64 bg-gray-200 p-4 border-l shadow-lg transform ${menuOpen ? "translate-x-0" : "translate-x-full"} transition-transform md:relative md:translate-x-0 md:w-1/4 md:border-r md:shadow-none`}>
+            <div className={`fixed top-0 right-0 h-full w-64 bg-gray-200 p-4 border-l shadow-lg transform ${menuOpen ? "translate-x-0 z-50" : "translate-x-full"} transition-transform md:relative md:translate-x-0 md:w-1/4 md:border-r md:shadow-none`}>
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-bold">Subscribed Classes</h2>
                     <FaHome
                         onClick={() => navigate("/")}
-                        className="cursor-pointer text-2xl text-gray-700 hover:text-green-500"
+                        className={`${menuOpen ? "hidden" : "block"} cursor-pointer text-2xl text-gray-700 hover:text-green-500`}
                     />
                 </div>
                 {classes.map((cls) => (

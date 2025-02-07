@@ -76,7 +76,7 @@ const ClassPage = () => {
                         className="w-14 h-14 rounded-full border-2 cursor-pointer border-blue-400"
                         alt="Logo"
                     />
-                    <h1 className="text-3xl italic font-bold text-center">Loop IN</h1>
+                    <h1 className="text-3xl font-bold text-center"><span className="text-green-600">Loop</span><span className="text-blue-600"> IN</span></h1>
                 </div>
 
                 {/* Mobile Menu Icon */}

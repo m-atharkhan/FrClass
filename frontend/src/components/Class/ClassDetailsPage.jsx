@@ -4,6 +4,7 @@ import axios from "axios";
 import ClassContent from "./ClassContent.jsx";
 import { useChat } from "../../context/ChatContext.jsx";
 import { FaHome } from "react-icons/fa";
+import API from "../../api/axios.js";
 
 const ClassDetailsPage = () => {
     const { id } = useParams();
@@ -27,7 +28,7 @@ const ClassDetailsPage = () => {
 
     const fetchUserSubscribedClasses = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/class/subscribe", {
+            const res = await API.get("/class/subscribe", {
                 withCredentials: true,
             });
             setClasses(res.data.classes);
@@ -38,7 +39,7 @@ const ClassDetailsPage = () => {
 
     const fetchClassDetails = async (classId) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/class/get-class/${classId}`, {
+            const res = await API.get(`/class/get-class/${classId}`, {
                 withCredentials: true,
             });
             setClassDetails(res.data.class);

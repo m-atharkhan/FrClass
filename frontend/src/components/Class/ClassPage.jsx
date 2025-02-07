@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axios from "axios";
+import API from "../../api/axios";
 
 const ClassPage = () => {
     const { user } = useAuth();
@@ -22,7 +23,7 @@ const ClassPage = () => {
 
     const fetchClasses = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/class/get-all-classes");
+            const res = await API.get("/class/get-all-classes");
             setClasses(res.data.class);
         } catch (error) {
             console.error("Error fetching classes:", error);
@@ -31,7 +32,7 @@ const ClassPage = () => {
 
     const fetchUserSubscribedClasses = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/class/subscribe", {
+            const res = await API.get("/class/subscribe", {
                 withCredentials: true,
             });
             setUserClasses(res.data.classes.map(cls => cls._id));
@@ -46,8 +47,8 @@ const ClassPage = () => {
             return alert("All fields are required!");
         }
         try {
-            await axios.post(
-                "http://localhost:5000/api/class/create",
+            await API.post(
+                "/class/create",
                 newClass,
                 { withCredentials: true }
             );
@@ -61,7 +62,7 @@ const ClassPage = () => {
 
     const handleJoinClass = async (classId) => {
         try {
-            await axios.post(`http://localhost:5000/api/class/subscribe/${classId}`, {}, { withCredentials: true });
+            await API.post(`/class/subscribe/${classId}`, {}, { withCredentials: true });
             alert("You have joined the class!");
             fetchUserSubscribedClasses();
         } catch (error) {

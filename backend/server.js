@@ -36,11 +36,17 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use('/api/user', userRoutes);
 app.use('/api/class', classRoutes);
 app.use('/api/poll', pollRoutes);
 app.use('/api/chat', chatRoutes);
+
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: "Welcome"
+  })
+})
 
 io.on("connection", (socket) => {
 console.log("A user connected:", socket.id);

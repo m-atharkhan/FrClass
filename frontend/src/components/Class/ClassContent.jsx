@@ -110,6 +110,7 @@ const ClassContent = ({ classDetails, id }) => {
                 </div>
 
                 {/* Chat Input */}
+
                 <div className="fixed bottom-0 left-0 w-full bg-white p-2 border-t shadow-lg flex items-center z-50">
                     {/* Emoji Picker Button (WhatsApp-style) */}
                     <button

@@ -3,6 +3,8 @@ import { useChat } from "../../context/ChatContext.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { FaCamera } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
+import { FaCamera, FaMicrophone, FaPaperPlane } from "react-icons/fa";
+import { BsEmojiSmile } from "react-icons/bs"; // WhatsApp-like emoji icon
 
 const ClassContent = ({ classDetails, id }) => {
     const { chatMessages, message, setMessage, sendMessage, image, setImage, chatEndRef } = useChat();
@@ -108,7 +110,23 @@ const ClassContent = ({ classDetails, id }) => {
                 </div>
 
                 {/* Chat Input */}
-                <div className="flex relative p-2 border-t">
+                <div className="fixed bottom-0 left-0 w-full bg-white p-2 border-t shadow-lg flex items-center z-50">
+                    {/* Emoji Picker Button (WhatsApp-style) */}
+                    <button
+                        className="text-gray-500 text-2xl p-2 hover:text-green-500 transition"
+                        onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}
+                    >
+                        <BsEmojiSmile />
+                    </button>
+
+                    {/* Emoji Picker Dropdown */}
+                    {emojiPickerVisible && (
+                        <div className="absolute bottom-16 left-2 bg-white p-2 rounded-lg shadow-lg z-50">
+                            <EmojiPicker onEmojiClick={handleEmojiClick} />
+                        </div>
+                    )}
+
+                    {/* Input Field (WhatsApp Style) */}
                     <input
                         type="text"
                         value={message}
@@ -118,50 +136,34 @@ const ClassContent = ({ classDetails, id }) => {
                                 handleSendMessage();
                             }
                         }}
-                        placeholder="Type a message or send an image..."
-                        className="flex-1 p-2 border rounded-l-lg focus:outline-none"
+                        placeholder="Type a message"
+                        className="flex-1 p-3 rounded-full border focus:outline-none bg-gray-100 text-gray-800 mx-2"
                     />
-                    <button
-                        onClick={handleSendMessage}
-                        className="bg-green-600 text-white px-4 cursor-pointer rounded-r-lg hover:bg-green-700 transition duration-300"
-                    >
-                        Send
-                    </button>
 
-                    {/* Image Upload Button */}
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImagePreview}
-                        className="hidden"
-                        id="imageUpload"
-                    />
-                    <label htmlFor="imageUpload">
-                        <FaCamera className="text-2xl my-2 cursor-pointer ml-2" />
+                    {/* Image Upload Button (WhatsApp-style Camera Icon) */}
+                    <input type="file" accept="image/*" onChange={handleImagePreview} className="hidden" id="imageUpload" />
+                    <label htmlFor="imageUpload" className="cursor-pointer text-gray-500 text-2xl p-2 hover:text-green-500 transition">
+                        <FaCamera />
                     </label>
 
-                    {/* Emoji Picker */}
-                    <button
-                        className="text-2xl cursor-pointer ml-2"
-                        onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}
-                    >
-                        😀
-                    </button>
-
-                    {emojiPickerVisible && (
-                        <div className="absolute bottom-16">
-                            <EmojiPicker onEmojiClick={handleEmojiClick} />
-                        </div>
+                    {/* Send or Microphone Button (WhatsApp-style Logic) */}
+                    {message || imagePreview ? (
+                        <button
+                            onClick={handleSendMessage}
+                            className="bg-green-600 text-white p-3 rounded-full hover:bg-green-700 transition ml-2"
+                        >
+                            <FaPaperPlane />
+                        </button>
+                    ) : (
+                        <button className="text-gray-500 text-2xl p-2 hover:text-green-500 transition">
+                            <FaMicrophone />
+                        </button>
                     )}
 
-                    {/* Preview Selected Image */}
+                    {/* Image Preview Floating Box (WhatsApp-style) */}
                     {imagePreview && (
-                        <div className="absolute bottom-20 bg-gray-100 p-4 rounded-lg shadow-md">
-                            <img
-                                src={imagePreview}
-                                alt="Preview"
-                                className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-                            />
+                        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-lg shadow-md w-40 z-50">
+                            <img src={imagePreview} alt="Preview" className="w-full h-auto object-cover rounded-lg border border-gray-300" />
                             <button
                                 className="text-red-500 text-xl ml-4"
                                 onClick={() => {
@@ -174,6 +176,7 @@ const ClassContent = ({ classDetails, id }) => {
                         </div>
                     )}
                 </div>
+
             </div>
         </div>
     );

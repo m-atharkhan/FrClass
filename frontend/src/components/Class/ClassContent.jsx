@@ -32,9 +32,9 @@ const ClassContent = ({ classDetails, id }) => {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImagePreview(reader.result); // Base64 for preview
+                setImagePreview(reader.result);
                 setSelectedImage(reader.result);
-                setImage(reader.result); // Base64 for sending
+                setImage(reader.result);
             };
             reader.readAsDataURL(file);
         }
@@ -46,10 +46,10 @@ const ClassContent = ({ classDetails, id }) => {
     };
 
     return (
-        <div className="w-3/4 p-6 flex flex-col">
-            {/* Class Information */}
+        <div className="flex flex-col lg:flex-row w-full h-full p-4 gap-4">
+            {/* Class Information (Takes full width on mobile) */}
             {classDetails ? (
-                <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-full lg:w-2/3">
                     <h1 className="text-2xl font-bold text-green-700 cursor-pointer" onClick={handleClassClick}>
                         {classDetails.name}
                     </h1>
@@ -83,10 +83,10 @@ const ClassContent = ({ classDetails, id }) => {
                 <p className="text-gray-500 text-center">Loading class details...</p>
             )}
 
-            {/* Chat Section */}
-            <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-4">
+            {/* Chat Section (Stacks below class description on mobile) */}
+            <div className="flex-1 flex flex-col bg-white rounded-lg shadow-lg p-4 w-full lg:w-1/3">
                 {/* Chat Messages */}
-                <div className="flex-1 overflow-y-auto max-h-[65vh] p-2">
+                <div className="flex-1 overflow-y-auto max-h-[50vh] lg:max-h-[65vh] p-2">
                     {chatMessages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.sender._id === user._id ? "justify-start" : "justify-end"} mb-2`}>
                             <div className={`p-2 rounded-lg shadow ${msg.sender._id === user._id
@@ -96,7 +96,7 @@ const ClassContent = ({ classDetails, id }) => {
                                 <div className="text-xs block mt-1 text-green-800">{msg.sender._id === user._id ? "Me" : msg.sender.username}</div>
                                 <p className="text-sm">{msg.message}</p>
                                 {msg.image && (
-                                    <img src={msg.image} alt="Message attachment" className="mt-2 object-cover rounded-lg" />
+                                    <img src={msg.image} alt="Message attachment" className="mt-2 object-cover rounded-lg w-32" />
                                 )}
                                 <span className="text-xs block mt-1 text-gray-500">
                                     {new Date(msg.timestamp).toLocaleTimeString()}
@@ -118,7 +118,7 @@ const ClassContent = ({ classDetails, id }) => {
                                 handleSendMessage();
                             }
                         }}
-                        placeholder="Type a message or send an image..."
+                        placeholder="Type a message..."
                         className="flex-1 p-2 border rounded-l-lg focus:outline-none"
                     />
                     <button
@@ -128,7 +128,7 @@ const ClassContent = ({ classDetails, id }) => {
                         Send
                     </button>
 
-                    {/* Image Upload Button */}
+                    {/* Image Upload */}
                     <input
                         type="file"
                         accept="image/*"
@@ -156,11 +156,11 @@ const ClassContent = ({ classDetails, id }) => {
 
                     {/* Preview Selected Image */}
                     {imagePreview && (
-                        <div className="absolute bottom-20 bg-gray-100 p-4 rounded-lg shadow-md">
+                        <div className="absolute bottom-20 bg-gray-100 p-4 rounded-lg shadow-md w-40">
                             <img
                                 src={imagePreview}
                                 alt="Preview"
-                                className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                                className="w-full h-auto object-cover rounded-lg border border-gray-300"
                             />
                             <button
                                 className="text-red-500 text-xl ml-4"

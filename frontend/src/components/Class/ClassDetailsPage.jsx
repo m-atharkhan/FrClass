@@ -36,9 +36,7 @@ const ClassDetailsPage = () => {
 
     const fetchUserSubscribedClasses = async () => {
         try {
-            const res = await API.get("/class/subscribe", {
-                withCredentials: true,
-            });
+            const res = await API.get("/class/subscribe", { withCredentials: true });
             setClasses(res.data.classes);
         } catch (error) {
             console.error("Error fetching subscribed classes:", error);
@@ -47,9 +45,7 @@ const ClassDetailsPage = () => {
 
     const fetchClassDetails = async (classId) => {
         try {
-            const res = await API.get(`/class/get-class/${classId}`, {
-                withCredentials: true,
-            });
+            const res = await API.get(`/class/get-class/${classId}`, { withCredentials: true });
             setClassDetails(res.data.class);
         } catch (error) {
             console.error("Error fetching class details:", error);
@@ -57,16 +53,12 @@ const ClassDetailsPage = () => {
     };
 
     return (
-        <div className="flex h-screen overflow-y-clip">
-            {/* Sidebar (Hidden on Mobile) */}
+        <div className="flex h-screen overflow-hidden">
             {!isMobile && (
                 <div className="w-1/4 bg-gray-200 p-4 border-r overflow-y-auto">
                     <div className="flex justify-between">
                         <h2 className="text-lg font-bold mb-4">Subscribed Classes</h2>
-                        <FaHome
-                            onClick={() => navigate("/")}
-                            className="cursor-pointer text-2xl"
-                        />
+                        <FaHome onClick={() => navigate("/")} className="cursor-pointer text-2xl" />
                     </div>
                     {classes.map((cls) => (
                         <div
@@ -80,25 +72,17 @@ const ClassDetailsPage = () => {
                 </div>
             )}
 
-            {/* Mobile Toggle Button */}
             {isMobile && (
-                <button
-                    className="fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-full"
-                    onClick={() => setSidebarVisible(!sidebarVisible)}
-                >
+                <button className="fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-full" onClick={() => setSidebarVisible(!sidebarVisible)}>
                     <FaBars className="text-xl" />
                 </button>
             )}
 
-            {/* Mobile Sidebar */}
             {isMobile && sidebarVisible && (
-                <div className="absolute top-0 left-0 w-3/4 h-full bg-gray-200 p-4 shadow-lg">
+                <div className="absolute top-0 left-0 w-3/4 h-full bg-gray-200 p-4 shadow-lg z-50">
                     <div className="flex justify-between">
                         <h2 className="text-lg font-bold mb-4">Subscribed Classes</h2>
-                        <FaHome
-                            onClick={() => navigate("/")}
-                            className="cursor-pointer text-2xl"
-                        />
+                        <FaHome onClick={() => navigate("/")} className="cursor-pointer text-2xl" />
                     </div>
                     {classes.map((cls) => (
                         <div
@@ -115,8 +99,9 @@ const ClassDetailsPage = () => {
                 </div>
             )}
 
-            {/* Show Class Content Only on Mobile */}
-            {isMobile && <ClassContent classDetails={classDetails} id={id} />}
+            <div className="flex-grow flex flex-col h-full w-full">
+                <ClassContent classDetails={classDetails} id={id} />
+            </div>
         </div>
     );
 };

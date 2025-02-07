@@ -70,22 +70,25 @@ const ClassContent = ({ classDetails, id }) => {
                 <div className="flex-1 overflow-y-auto max-h-[65vh] p-2">
                     {chatMessages.map((msg, i) => (
                         <div key={i} className={`flex ${msg.sender._id === user._id ? "justify-end" : "justify-start"} mb-2`}>
-                            <div className={`p-2 rounded-2xl shadow-md text-sm max-w-xs ${msg.sender._id === user._id
-                                ? "bg-green-500 text-white"
-                                : "bg-gray-200 text-black"
-                                }`}
+                            <div className={`p-2 rounded-2xl shadow-md text-sm max-w-[80%] break-words overflow-x-hidden 
+                ${msg.sender._id === user._id ? "bg-green-500 text-white" : "bg-gray-200 text-black"}`}
                             >
-                                <div className="text-xs text-red-300">{msg.sender._id === user._id ? "Me" : msg.sender.username}</div>
+                                <div className="text-xs text-red-300">
+                                    {msg.sender._id === user._id ? "Me" : msg.sender.username}
+                                </div>
                                 <p className="mt-1">{msg.message}</p>
                                 {msg.image && (
                                     <img src={msg.image} alt="Attachment" className="mt-2 w-40 h-auto rounded-lg" />
                                 )}
-                                <span className="text-xs text-gray-300 block mt-1">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                                <span className="text-xs text-gray-300 block mt-1">
+                                    {new Date(msg.timestamp).toLocaleTimeString()}
+                                </span>
                             </div>
                         </div>
                     ))}
                     <div ref={chatEndRef}></div>
                 </div>
+
 
                 {/* Chat Input */}
                 <div className="fixed bottom-0 right-0 w-full md:w-3/4 bg-white p-2 border-t flex items-center shadow-lg z-50">

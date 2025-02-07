@@ -58,7 +58,7 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        onClick={() => navigate('/profile')}
+                        onClick={() => navigate('/register')}
                         className="block w-full my-5 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-300 text-center"
                     >
                         Profile

@@ -52,7 +52,7 @@ const ClassDetailsPage = () => {
         <div className="flex h-screen overflow-y-clip relative">
             {/* Hamburger Menu Button (Mobile) */}
             <button
-                className="absolute top-4 right-4 z-50 md:hidden text-white bg-transparent text-2xl"
+                className="absolute top-4 right-4 z-50 block md:hidden text-black bg-transparent text-2xl"
                 onClick={() => setMenuOpen(!menuOpen)}
             >
                 {menuOpen ? <FaTimes /> : <FaBars />}

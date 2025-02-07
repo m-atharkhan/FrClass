@@ -70,7 +70,7 @@ const Profile = () => {
                     src={profilePic ? profilePic : user?.profilePic || "https://static.vecteezy.com/system/resources/previews/019/896/028/original/add-new-user-icon-in-black-colors-profile-avatar-with-plus-symbol-png.png"}
                     alt="Profile"
                     onClick={handleImageClick}
-                    className="w-40 h-40 mx-auto rounded-full border-2 mb-4 border-blue-400"
+                    className="h-40 mx-auto rounded-full border-2 mb-4 border-blue-400"
                 />
 
                 {/* Display Non-Editable Fields */}

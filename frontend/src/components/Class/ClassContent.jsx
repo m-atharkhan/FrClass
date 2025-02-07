@@ -75,7 +75,7 @@ const ClassContent = ({ classDetails, id }) => {
                                 : "bg-gray-200 text-black"
                                 }`}
                             >
-                                <div className="text-xs text-gray-300">{msg.sender._id === user._id ? "Me" : msg.sender.username}</div>
+                                <div className="text-xs text-red-300">{msg.sender._id === user._id ? "Me" : msg.sender.username}</div>
                                 <p className="mt-1">{msg.message}</p>
                                 {msg.image && (
                                     <img src={msg.image} alt="Attachment" className="mt-2 w-40 h-auto rounded-lg" />
@@ -114,12 +114,6 @@ const ClassContent = ({ classDetails, id }) => {
                         className="flex-1 p-3 rounded-full bg-gray-100 border border-gray-300 focus:outline-none text-gray-800 mx-2"
                     />
 
-                    {/* Image Upload Button */}
-                    <input type="file" accept="image/*" onChange={handleImagePreview} className="hidden" id="imageUpload" />
-                    <label htmlFor="imageUpload" className="cursor-pointer text-gray-500 text-2xl p-2 hover:text-green-500 transition">
-                        <FaCamera />
-                    </label>
-
                     {/* Send or Microphone Button */}
                     {message || imagePreview ? (
                         <button onClick={handleSendMessage} className="bg-green-600 text-white p-3 rounded-full hover:bg-green-700 transition ml-2">
@@ -130,6 +124,12 @@ const ClassContent = ({ classDetails, id }) => {
                             {/* <FaMicrophone /> */}
                         </button>
                     )}
+
+                    {/* Image Upload Button */}
+                    <input type="file" accept="image/*" onChange={handleImagePreview} className="hidden" id="imageUpload" />
+                    <label htmlFor="imageUpload" className="cursor-pointer text-gray-500 text-2xl p-2 hover:text-green-500 transition">
+                        <FaCamera />
+                    </label>
 
                     {/* Image Preview Box */}
                     {imagePreview && (

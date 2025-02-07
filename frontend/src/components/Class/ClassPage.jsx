@@ -99,7 +99,7 @@ const ClassPage = () => {
                         </button>
                     ) : (
                         <img
-                            src={user.profilePic}
+                            src={user.profilePic || "https://static.vecteezy.com/system/resources/previews/019/896/028/original/add-new-user-icon-in-black-colors-profile-avatar-with-plus-symbol-png.png"}
                             onClick={() => navigate('/profile')}
                             className="w-14 h-14 rounded-full border-2 cursor-pointer border-blue-400"
                             alt="User Profile"

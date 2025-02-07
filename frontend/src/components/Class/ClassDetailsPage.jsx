@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClassContent from "./ClassContent.jsx";
 import { useChat } from "../../context/ChatContext.jsx";
-import { FaHome, FaBars } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import API from "../../api/axios.js";
 
 const ClassDetailsPage = () => {
@@ -12,14 +12,6 @@ const ClassDetailsPage = () => {
     const { setClassId } = useChat();
     const [classDetails, setClassDetails] = useState(null);
     const [classes, setClasses] = useState([]);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [sidebarVisible, setSidebarVisible] = useState(false);
-
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768);
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     useEffect(() => {
         fetchUserSubscribedClasses();
@@ -36,7 +28,9 @@ const ClassDetailsPage = () => {
 
     const fetchUserSubscribedClasses = async () => {
         try {
-            const res = await API.get("/class/subscribe", { withCredentials: true });
+            const res = await API.get("/class/subscribe", {
+                withCredentials: true,
+            });
             setClasses(res.data.classes);
         } catch (error) {
             console.error("Error fetching subscribed classes:", error);
@@ -45,7 +39,9 @@ const ClassDetailsPage = () => {
 
     const fetchClassDetails = async (classId) => {
         try {
-            const res = await API.get(`/class/get-class/${classId}`, { withCredentials: true });
+            const res = await API.get(`/class/get-class/${classId}`, {
+                withCredentials: true,
+            });
             setClassDetails(res.data.class);
         } catch (error) {
             console.error("Error fetching class details:", error);
@@ -53,56 +49,29 @@ const ClassDetailsPage = () => {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden">
-            {!isMobile && (
-                <div className="w-1/4 bg-gray-200 p-4 border-r overflow-y-auto">
-                    <div className="flex justify-between">
-                        <h2 className="text-lg font-bold mb-4">Subscribed Classes</h2>
-                        <FaHome onClick={() => navigate("/")} className="cursor-pointer text-2xl" />
-                    </div>
-                    {classes.map((cls) => (
-                        <div
-                            key={cls._id}
-                            onClick={() => navigate(`/class/${cls._id}`)}
-                            className={`p-3 rounded-lg cursor-pointer mb-2 hover:bg-green-400 transition ${id === cls._id ? "bg-green-600 text-white" : "bg-white"}`}
-                        >
-                            {cls.name}
-                        </div>
-                    ))}
+        <div className="flex h-screen overflow-y-clip">
+            <div className="w-1/4 relative bg-gray-200 p-4 border-r overflow-y-auto">
+                <div className="flex justify-between">
+                    <h2 className="text-lg font-bold mb-4">Subscribed Classes</h2>
+                    <FaHome
+                        onClick={() => navigate("/")}
+                        className="cursor-pointer text-2xl">
+                        Home
+                    </FaHome>
                 </div>
-            )}
-
-            {isMobile && (
-                <button className="fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-full" onClick={() => setSidebarVisible(!sidebarVisible)}>
-                    <FaBars className="text-xl" />
-                </button>
-            )}
-
-            {isMobile && sidebarVisible && (
-                <div className="absolute top-0 left-0 w-3/4 h-full bg-gray-200 p-4 shadow-lg z-50">
-                    <div className="flex justify-between">
-                        <h2 className="text-lg font-bold mb-4">Subscribed Classes</h2>
-                        <FaHome onClick={() => navigate("/")} className="cursor-pointer text-2xl" />
+                {classes.map((cls) => (
+                    <div
+                        key={cls._id}
+                        onClick={() => navigate(`/class/${cls._id}`)}
+                        className={`p-3 rounded-lg cursor-pointer mb-2 hover:bg-green-400 transition ${id === cls._id ? "bg-green-600 text-white" : "bg-white"}`}
+                    >
+                        {cls.name}
                     </div>
-                    {classes.map((cls) => (
-                        <div
-                            key={cls._id}
-                            onClick={() => {
-                                navigate(`/class/${cls._id}`);
-                                setSidebarVisible(false);
-                            }}
-                            className={`p-3 rounded-lg cursor-pointer mb-2 hover:bg-green-400 transition ${id === cls._id ? "bg-green-600 text-white" : "bg-white"}`}
-                        >
-                            {cls.name}
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            <div className="flex-grow flex flex-col h-full w-full">
-                <ClassContent classDetails={classDetails} id={id} />
+                ))}
             </div>
-        </div>
+
+            <ClassContent classDetails={classDetails} id={id} />
+        </div >
     );
 };
 

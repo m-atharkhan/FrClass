@@ -48,6 +48,16 @@ app.get('/', (req, res) => {
   })
 })
 
+import path from "path";
+
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "client/build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+});
+
+
 io.on("connection", (socket) => {
 console.log("A user connected:", socket.id);
 

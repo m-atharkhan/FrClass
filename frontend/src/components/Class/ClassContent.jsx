@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useChat } from "../../context/ChatContext.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { FaCamera } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import { FaCamera, FaMicrophone, FaPaperPlane } from "react-icons/fa";
 import { BsEmojiSmile } from "react-icons/bs"; // WhatsApp-like emoji icon

@@ -64,7 +64,7 @@ const ClassDetailsPage = () => {
                     <h2 className="text-lg font-bold">Subscribed Classes</h2>
                     <FaHome
                         onClick={() => navigate("/")}
-                        className="fixed -bottom-10 right-4 cursor-pointer text-2xl text-gray-700 hover:text-green-500"
+                        className="cursor-pointer text-2xl text-gray-700 hover:text-green-500"
                     />
                 </div>
                 {classes.map((cls) => (

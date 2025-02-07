@@ -52,7 +52,7 @@ const ClassDetailsPage = () => {
         <div className="flex h-screen overflow-y-clip relative">
             {/* Hamburger Menu Button (Mobile) */}
             <button
-                className="absolute top-4 right-4 z-50 block md:hidden text-black bg-transparent text-2xl"
+                className="absolute top-4 right-4 z-51 block md:hidden text-black bg-transparent text-2xl"
                 onClick={() => setMenuOpen(!menuOpen)}
             >
                 {menuOpen ? <FaTimes /> : <FaBars />}
@@ -64,7 +64,7 @@ const ClassDetailsPage = () => {
                     <h2 className="text-lg font-bold">Subscribed Classes</h2>
                     <FaHome
                         onClick={() => navigate("/")}
-                        className="cursor-pointer text-2xl text-gray-700 hover:text-green-500"
+                        className="fixed -bottom-10 right-4 cursor-pointer text-2xl text-gray-700 hover:text-green-500"
                     />
                 </div>
                 {classes.map((cls) => (
